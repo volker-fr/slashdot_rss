@@ -1,28 +1,41 @@
-== README
+= README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This project creates a limited slashdot rss feed. There are currently three options:
 
-Things you may want to cover:
+* ${url}/rss/top3.rss provides all posts "Top 3 Stories of the Day" and "Top 10 Stories of the Week"
+* ${url}/rss/topweek.rss provides all posts Slashdot rated as "Top 10 Stories of the Week".
+* ${url}/rss/all.rss (this is just for debugging and useless)
 
-* Ruby version
+This project is inspired by http://hnapp.com/ which filters the amount of news you want to receive from Hackernews.
 
-* System dependencies
+== How to run it
 
-* Configuration
+=== Install dependencies
+<tt>bundle install</tt>
 
-* Database creation
+=== Update the database with latest data
+You want to run the following command via cron or similar
+<tt>./bin/rake slashdot:update</tt>
 
-* Database initialization
+== How it works
 
-* How to run the test suite
+The rake job parses the data from http://slashdot.org/archive.pl which contains all slashdot articles from the last 7 days.
 
-* Services (job queues, cache servers, search engines, etc.)
+Each entry contains the following information:
 
-* Deployment instructions
+1. Title
+2. URL
+3. Number of comments
+4. "Achievements". One achievement indicates "Top 3 Stories of the Day" and two "Top 10 Stories of the Week"
 
-* ...
+All these data is provided by Slashdot.
 
+Each article URL is parsed to get the creation date and content of the article.
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+Each <tt>./bin/rake slashdot:update</tt> execution updates all values if changed (mostly important for the "achievements").
+
+The RSS feed itself just utilizes the stored data by filtering out the data
+
+== TODO
+1. Tests
+2. Provide RSS feeds where the minimum amount of comments can be provided
