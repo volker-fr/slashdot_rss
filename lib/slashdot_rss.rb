@@ -30,6 +30,9 @@ class SlashdotParseRss
   end
 
   def get_article_details(url)
+    # http://blog.thecodewhisperer.com/permalink/losing-time-to-faraday
+    # http redirects to https these days...
+    url.sub!('http:', 'https:')
     response = Faraday.get(url)
     doc = Nokogiri::HTML(response.body)
     content = doc.css('div.body')
@@ -38,7 +41,7 @@ class SlashdotParseRss
   end
 
   def pull_articles
-    archive_url = 'http://slashdot.org/archive.pl'
+    archive_url = 'https://slashdot.org/archive.pl'
 
     response = Faraday.get(archive_url)
     doc = Nokogiri::HTML(response.body)
