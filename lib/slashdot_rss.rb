@@ -7,7 +7,7 @@ class SlashdotParseRss
     achievement = p.scan('<span class="ui-icon medal">').count
     comments =
       p.sub(%r{.*<span>([0-9]+)<span class="hide"> comments</span>.*}m, '\1')
-    url = 'http:' + Nokogiri::HTML(p).css('a').attribute('href')
+    url = 'https:' + Nokogiri::HTML(p).css('a').attribute('href')
     headline = Nokogiri::HTML(p).css('a').text
 
     { 'url': url,
@@ -30,9 +30,6 @@ class SlashdotParseRss
   end
 
   def get_article_details(url)
-    # http://blog.thecodewhisperer.com/permalink/losing-time-to-faraday
-    # http redirects to https these days...
-    url.sub!('http:', 'https:')
     response = Faraday.get(url)
     doc = Nokogiri::HTML(response.body)
     content = doc.css('div.body')
